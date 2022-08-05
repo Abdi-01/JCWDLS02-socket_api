@@ -31,4 +31,17 @@ io.on('connection', (socket) => {
     })
 });
 
+const channelNew = io.of('/notif'); // io.of itu untuk membuat namespace/channel baru
+channelNew.on('connection', (socket) => {
+    socket.on('JoinSocket', (data) => {
+        console.log("User join data :", data);
+        channelNew.emit('joinNotif', `${data.username} Success Join Socket ✅`)
+    })
+
+    socket.on('chat', (data) => {
+        dataChat.push(data);
+        channelNew.emit('chatForward', dataChat);
+    })
+});
+
 httpServer.listen(PORT, () => console.log(`Socket server : ${PORT}`));
