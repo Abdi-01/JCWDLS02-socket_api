@@ -16,12 +16,19 @@ App.get('/', (req, res) => {
     res.status(200).send('<h1>Socket API</h1>')
 });
 
+let dataChat = []; // menyimpan data chat sementara
+
 // Configure connection socket from client
 io.on('connection', (socket) => {
     socket.on('JoinSocket', (data) => {
         console.log("User join data :", data);
         io.emit('joinNotif', `${data.username} Success Join Socket ✅`)
     })
-})
+
+    socket.on('chat', (data) => {
+        dataChat.push(data);
+        io.emit('chatForward', dataChat);
+    })
+});
 
 httpServer.listen(PORT, () => console.log(`Socket server : ${PORT}`));
